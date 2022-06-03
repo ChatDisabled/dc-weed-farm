@@ -29,10 +29,12 @@ Config.weeddryleaves = {
     ['weed_ak47_leaves'] = 'weed_ak47_dried_leaves'
 }
 
-Config.regrowtimer = 120 -- seconds
-Config.weedtimer = 15 -- seconds
+Config.regrowtimer = 10 -- seconds
+Config.weedtimer = 10 -- seconds
 
 Config.locations = {
     ['cutweed'] = vector3(2328.72, 2570.59, 46.55),
     ['dryweed'] = vector3(1942.5, 4654.16, 43.18),
 }
+
+Config.dryingprop = vector3(1943.01, 4654.66, 43.15)
