@@ -11,7 +11,6 @@ LoopParticle = false
 --- Distance Check On Weed Prop
 CreateThread(function()
 	while true do
-        local WaitTime = 300
 		local PlayerCoords = GetEntityCoords(PlayerPedId())
         WeedPlant = GetClosestObjectOfType(PlayerCoords, 1.6, 452618762, false, false, false)
         if WeedPlant ~= 0 then
@@ -26,20 +25,33 @@ CreateThread(function()
                 NearbyPlant = false
             end
         end
-        Wait(WaitTime)
+        Wait(250)
 	end
 end)
 
 --- Weed Prop Interaction check
 CreateThread(function()
+    local alreadyEnteredZone = false
+    local text = nil
 	while true do
-        local WaitTime = 300
+        local WaitTime = 250
+        local inZone = false
         if NearbyPlant then
             WaitTime = 0
-            DrawText3D(WeedCoords.x, WeedCoords.y, WeedCoords.z + 1, "~o~E~w~ - Trim Weed")
+            inZone = true
+            text = 'E - Trim Weed'
             if IsControlJustReleased(0, 38) then
                 TriggerServerEvent('qb-weed-farm:server:trim', WeedCoords.x, WeedCoords.y)
             end
+        end
+        if inZone and not alreadyEnteredZone then
+            alreadyEnteredZone = true
+            TriggerEvent('cd_drawtextui:ShowUI', 'show', text)
+        end
+
+        if not inZone and alreadyEnteredZone then
+            alreadyEnteredZone = false
+            TriggerEvent('cd_drawtextui:HideUI')
         end
         Wait(WaitTime)
     end
@@ -47,38 +59,41 @@ end)
 
 --- All the interaction locations
 CreateThread(function()
+    local alreadyEnteredZone = false
+    local text = nil
+    local oldText = nil
     while true do 
         local WaitTime = 750
+        local inZone = false
         local PlayerCoords = GetEntityCoords(PlayerPedId())
         for k, v in pairs(Config.locations) do
             if not DoingSomething then
                 if k == 'cutweed' then
                     if #(PlayerCoords - v) <= 1.5 then
                         WaitTime = 0
-                        DrawText3D(v.x, v.y, v.z + 0.4, "~o~E~w~ - Cut Weed")
+                        inZone = true
+                        text = 'E - Cut Weed'
                         if IsControlJustReleased(0, 38) then
                             TriggerServerEvent('qb-weed-farm:server:cutting')
                         end
-                    elseif #(PlayerCoords - v) <= 2.8 then
-                        WaitTime = 0
-                        DrawText3D(v.x, v.y, v.z + 0.4, "Cut Weed")
                     end
                 elseif k == 'dryweed' then
                     if not DryingWeed then
                         if not WeedCollected then
                             if #(PlayerCoords - v) <= 1.5 then
                                 WaitTime = 0
+                                inZone = true
+                                text = 'E - Dry Weed'
                                 DrawText3D(v.x, v.y, v.z + 0.4, "~o~E~w~ - Dry Weed")
                                 if IsControlJustReleased(0, 38) then
                                     TriggerServerEvent('qb-weed-farm:server:drying')
                                 end
-                            elseif #(PlayerCoords - v) <= 3.4 then
-                                WaitTime = 0
-                                DrawText3D(v.x, v.y, v.z + 0.4, "Dry Weed")
                             end
                         else
                             if #(PlayerCoords - v) <= 2 then
                                 WaitTime = 0
+                                inZone = true
+                                text = 'E - Collect Weed'
                                 DrawText3D(v.x, v.y, v.z + 0.4, "~o~E~w~ - Collect Weed")
                                 if IsControlJustReleased(0, 38) then
                                     CollectWeed()
@@ -88,11 +103,27 @@ CreateThread(function()
                     else
                         if #(PlayerCoords - v) <= 2 then
                             WaitTime = 0
-                            DrawText3D(v.x, v.y, v.z + 0.4, "Weed is dry over: ~o~"..WeedTimer)
+                            inZone = true
+                            text = 'Weed is dry over: '..WeedTimer
                         end
                     end
                 end
             end
+        end
+        if inZone and not alreadyEnteredZone then
+            alreadyEnteredZone = true
+            oldText = text
+            TriggerEvent('cd_drawtextui:ShowUI', 'show', text)
+        end
+
+        if not inZone and alreadyEnteredZone then
+            alreadyEnteredZone = false
+            TriggerEvent('cd_drawtextui:HideUI')
+        end
+
+        if oldText ~= text then
+            oldText = text
+            TriggerEvent('cd_drawtextui:ShowUI', 'show', text)
         end
         Wait(WaitTime)
     end
