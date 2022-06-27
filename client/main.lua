@@ -84,7 +84,6 @@ CreateThread(function()
                                 WaitTime = 0
                                 inZone = true
                                 text = 'E - Dry Weed'
-                                DrawText3D(v.x, v.y, v.z + 0.4, "~o~E~w~ - Dry Weed")
                                 if IsControlJustReleased(0, 38) then
                                     TriggerServerEvent('qb-weed-farm:server:drying')
                                 end
@@ -94,7 +93,6 @@ CreateThread(function()
                                 WaitTime = 0
                                 inZone = true
                                 text = 'E - Collect Weed'
-                                DrawText3D(v.x, v.y, v.z + 0.4, "~o~E~w~ - Collect Weed")
                                 if IsControlJustReleased(0, 38) then
                                     CollectWeed()
                                 end
