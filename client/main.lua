@@ -11,7 +11,6 @@ LoopParticle = false
 --- Distance Check On Weed Prop
 CreateThread(function()
 	while true do
-        local WaitTime = 300
 		local PlayerCoords = GetEntityCoords(PlayerPedId())
         WeedPlant = GetClosestObjectOfType(PlayerCoords, 1.6, 452618762, false, false, false)
         if WeedPlant ~= 0 then
@@ -26,14 +25,14 @@ CreateThread(function()
                 NearbyPlant = false
             end
         end
-        Wait(WaitTime)
+        Wait(250)
 	end
 end)
 
 --- Weed Prop Interaction check
 CreateThread(function()
 	while true do
-        local WaitTime = 300
+        local WaitTime = 250
         if NearbyPlant then
             WaitTime = 0
             DrawText3D(WeedCoords.x, WeedCoords.y, WeedCoords.z + 1, "~o~E~w~ - Trim Weed")

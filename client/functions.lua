@@ -30,6 +30,7 @@ function TrimWeedMinigame(Scissors)
     local Ped = PlayerPedId()
     LoadAnimDict('anim@amb@business@weed@weed_inspecting_lo_med_hi@')
 	TaskPlayAnim(Ped, 'anim@amb@business@weed@weed_inspecting_lo_med_hi@' ,'weed_crouch_checkingleaves_idle_03_inspector', 8.0, -8.0, -1, 48, 0)
+    FreezeEntityPosition(Ped, true)
     AttachEntityToEntity(Scissors, Ped, GetPedBoneIndex(Ped, 57005), 0.18, 0.1, 0.0, 180.0, 0, 130.0, true, true, false, true, 1, true)
 
     local NeededAttempts = 0
@@ -48,6 +49,7 @@ function TrimWeedMinigame(Scissors)
         if SucceededAttempts + 1 >= NeededAttempts then
             TriggerServerEvent('qb-weed-farm:server:trim-finished', SucceededAttempts, NeededAttempts)
             ClearPedTasks(Ped)
+            FreezeEntityPosition(Ped, false)
             DeleteEntity(Scissors)
             FailedAttemps = 0
             SucceededAttempts = 0
@@ -65,6 +67,7 @@ function TrimWeedMinigame(Scissors)
 	end, function()
         QBCore.Functions.Notify('That wasn\'t really a good cut was it?', 'error', 3000)
         ClearPedTasks(Ped)
+        FreezeEntityPosition(Ped, false)
         DeleteEntity(Scissors)
         FailedAttemps = 0
         SucceededAttempts = 0
